@@ -1,9 +1,9 @@
 {
-  "name": "patrickschur/language-detection",
+  "name": "ruifil/language-detection",
   "type": "library",
   "description": "A language detection library for PHP. Detects the language from a given text string.",
   "keywords": ["language", "detection", "detect"],
-  "homepage": "https://github.com/patrickschur/language-detection",
+  "homepage": "https://github.com/ruifil/language-detection",
   "license": "MIT",
   "minimum-stability": "stable",
   "prefer-stable": true,
@@ -11,6 +11,10 @@
     {
       "name": "Patrick Schur",
       "email": "patrick_schur@outlook.de"
+    },
+    {
+      "name": "Rui Filipe Da Cunha Alves",
+      "email": "ruifil@ruifil.com"
     }
   ],
   "autoload": {
