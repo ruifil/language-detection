@@ -1,11 +1,8 @@
 <?php
 
-declare(strict_types = 1);
-
 namespace LanguageDetection\Tests;
 
 use LanguageDetection\Language;
-use PHPUnit\Framework\TestCase;
 
 /**
  * Class LanguageTest
@@ -15,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @author Patrick Schur <patrick_schur@outlook.de>
  * @package LanguageDetection\Tests
  */
-class LanguageResultTest extends TestCase
+class LanguageResultTest extends \PHPUnit_Framework_TestCase
 {
     public function testLimit()
     {
@@ -36,7 +33,7 @@ class LanguageResultTest extends TestCase
      * @param string $sample
      * @dataProvider sampleProvider
      */
-    public function testWhitelist(string $expected, string $sample)
+    public function testWhitelist($expected, $sample)
     {
         $l = new Language();
 
@@ -48,7 +45,7 @@ class LanguageResultTest extends TestCase
      * @param string $sample
      * @dataProvider sampleProvider
      */
-    public function testBlacklist(string $expected, string $sample)
+    public function testBlacklist($expected, $sample)
     {
         $l = new Language();
 
@@ -60,11 +57,11 @@ class LanguageResultTest extends TestCase
      * @param string $sample
      * @dataProvider sampleProvider
      */
-    public function testToString(string $expected, string $sample)
+    public function testToString($expected, $sample)
     {
         $l = new Language();
-
-        $this->assertEquals($expected, strval($l->detect($sample)));
+        $result = $l->detect($sample);
+        $this->assertEquals($expected, (string)$result, 'Bad detection, best match are : ' . print_r($result->bestResults()->close(), true));
     }
 
     public function testJsonSerialize()
@@ -126,14 +123,14 @@ class LanguageResultTest extends TestCase
     public function sampleProvider()
     {
         return [
-            ['de', 'Das ist ein Test.'],
-            ['ja', '最近どうですか。'],
-            ['hu', 'Nem beszélek magyarul?'],
-            ['es', '¡Buenos días! ¡Hasta la vista!'],
-            ['hi', 'मुझे हिंदी नहीं आती'],
-            ['et', 'Tere tulemast tagasi! Nägemist!'],
-            ['pl', 'Czy mówi pan po polsku?'],
-            ['fr', 'Où sont les toilettes?'],
+            'de' => ['de', 'Ich wünsche dir noch einen schönen Tag'],
+            'ja' => ['ja', '最近どうですか。'],
+            'hu' => ['hu', 'Nem beszélek magyarul?'],
+            'es' => ['es', 'Sé ha hecho un esfuerzo para detectar errores tipográficos'],
+            'hi' => ['hi', 'मुझे हिंदी नहीं आती'],
+            'et' => ['et', 'Tere tulemast tagasi! Nägemist!'],
+            'pl' => ['pl', 'Czy mówi pan po polsku?'],
+            'fr' => ['fr', 'Où sont les toilettes?'],
         ];
     }
 }

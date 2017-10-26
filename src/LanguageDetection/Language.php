@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types = 1);
-
 namespace LanguageDetection;
 
 /**
@@ -15,7 +13,7 @@ namespace LanguageDetection;
 class Language extends NgramParser
 {
     /**
-     * @var array
+     * @var array[]
      */
     protected $tokens = [];
 
@@ -25,7 +23,7 @@ class Language extends NgramParser
      * @param array $lang List of ISO 639-1 codes, that should be used in the detection phase
      * @param string $dirname Name of the directory where the translations files are located
      */
-    public function __construct(array $lang = [], string $dirname = '')
+    public function __construct(array $lang = [], $dirname = '')
     {
         if (empty($dirname))
         {
@@ -58,7 +56,7 @@ class Language extends NgramParser
      * @param string $str
      * @return LanguageResult
      */
-    public function detect(string $str): LanguageResult
+    public function detect($str)
     {
         $str = mb_strtolower($str);
 
@@ -82,7 +80,6 @@ class Language extends NgramParser
                         $sum += ($x + $y) ^ $y;
                         continue;
                     }
-
                     $sum += $this->maxNgrams;
                     ++$index;
                 }

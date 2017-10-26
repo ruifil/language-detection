@@ -1,11 +1,8 @@
 <?php
 
-declare(strict_types = 1);
-
 namespace LanguageDetection\Tests;
 
 use LanguageDetection\Trainer;
-use PHPUnit\Framework\TestCase;
 
 /**
  * Class TrainerTest
@@ -15,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @author Patrick Schur <patrick_schur@outlook.de>
  * @package LanguageDetection\Tests
  */
-class TrainerTest extends TestCase
+class TrainerTest extends \PHPUnit_Framework_TestCase
 {
     public function testLearn()
     {

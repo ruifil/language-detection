@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types = 1);
-
 namespace LanguageDetection\Tokenizer;
 
 /**
@@ -18,7 +16,7 @@ class WhitespaceTokenizer implements TokenizerInterface
      * @param string $str
      * @return array
      */
-    public function tokenize(string $str): array
+    public function tokenize($str)
     {
         return array_map(function ($word) {
                 return "_{$word}_";

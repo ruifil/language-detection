@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types = 1);
-
 namespace LanguageDetection\Tokenizer;
 
 /**
@@ -14,5 +12,5 @@ namespace LanguageDetection\Tokenizer;
  */
 interface TokenizerInterface
 {
-    public function tokenize(string $str): array;
+    public function tokenize($str);
 }

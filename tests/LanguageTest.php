@@ -1,12 +1,9 @@
 <?php
 
-declare(strict_types = 1);
-
 namespace LanguageDetection\Tests;
 
 use LanguageDetection\Language;
 use LanguageDetection\Tokenizer\TokenizerInterface;
-use PHPUnit\Framework\TestCase;
 
 /**
  * Class LanguageTest
@@ -16,18 +13,29 @@ use PHPUnit\Framework\TestCase;
  * @author Patrick Schur <patrick_schur@outlook.de>
  * @package LanguageDetection\Tests
  */
-class LanguageTest extends TestCase
+class LanguageTest extends \PHPUnit_Framework_TestCase
 {
-    public function testAll()
+    /**
+     * @param string $lang
+     * @param string $path
+     * @dataProvider testFileProvider
+     */
+    public function testFile($lang, $path)
     {
         $l = new Language();
+        $content = file_get_contents($path);
+        $results = $l->detect($content)->close();
+        $this->assertEquals(key($results), $lang);
+    }
 
-        foreach (new \GlobIterator(__DIR__ . '/../resources/*/*.txt') as $txt)
-        {
-            $content = file_get_contents($txt->getPathname());
-
-            $this->assertEquals(key($l->detect($content)->close()), $txt->getBasename('.txt'));
+    public function testFileProvider()
+    {
+        $files = [];
+        foreach (new \GlobIterator(__DIR__ . '/../resources/*/*.txt') as $txt) {
+            $lang = $txt->getBasename('.txt');
+            $files[$lang] = [$lang, $txt->getPathname()];
         }
+        return $files;
     }
 
     public function testConstructor()
@@ -49,15 +57,17 @@ class LanguageTest extends TestCase
 
         $stub->method('setTokenizer')->willReturn('');
 
+        $mock = $this->getMockBuilder(TokenizerInterface::class)
+            ->setMethods(array('tokenize'))
+            ->getMock();
+        $mock->method('tokenize')->will($this->returnCallback(function ($str) {
+            return preg_split('//u', $str, -1, PREG_SPLIT_NO_EMPTY);
+        }));
+
         /** @var Language $stub */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
-        $this->assertEquals('', $stub->setTokenizer(new class implements TokenizerInterface
-        {
-            public function tokenize(string $str): array
-            {
-                return preg_split('//u', $str, -1, PREG_SPLIT_NO_EMPTY);
-            }
-        }));
+        /** @noinspection PhpParamsInspection */
+        $this->assertEquals('', $stub->setTokenizer($mock));
     }
 
     /**
@@ -65,11 +75,12 @@ class LanguageTest extends TestCase
      * @param $sample
      * @dataProvider sampleProvider
      */
-    public function testSamples(string $expected, string $sample)
+    public function testSamples($expected, $sample)
     {
         $l = new Language();
 
-        $this->assertEquals($expected, key($l->detect($sample)->close()));
+        $results = $l->detect($sample)->close();
+        $this->assertEquals($expected, key($results));
     }
 
     /**
@@ -78,15 +89,15 @@ class LanguageTest extends TestCase
     public function sampleProvider()
     {
         return [
-            ['de', 'Ich wünsche dir noch einen schönen Tag'],
-            ['ja', '最近どうですか。'],
-            ['en', 'This sentences should be too small to be recognized.'],
-            ['nl', 'Mag het een onsje meer zijn? '],
-            ['hi', 'मुझे हिंदी नहीं आती'],
-            ['et', 'Tere tulemast tagasi! Nägemist!'],
-            ['pl', 'Wszystkiego najlepszego z okazji urodzin!'],
-            ['pl', 'Czy mówi pan po polsku?'],
-            ['fr', 'Où sont les toilettes?']
+            'de' => ['de', 'Ich wünsche dir noch einen schönen Tag'],
+            'ja' => ['ja', '最近どうですか。'],
+            'en' => ['en', 'This sentences should be too small to be recognized.'],
+            'nl' => ['nl', 'Mag het een onsje meer zijn? '],
+            'hi' => ['hi', 'मुझे हिंदी नहीं आती'],
+            'et' => ['et', 'Tere tulemast tagasi! Nägemist!'],
+            'pl' => ['pl', 'Wszystkiego najlepszego z okazji urodzin!'],
+            'pl2' => ['pl', 'Czy mówi pan po polsku?'],
+            'fr' => ['fr', 'Où sont les toilettes?']
         ];
     }
 }

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types = 1);
-
 namespace LanguageDetection;
 
 /**
@@ -20,7 +18,7 @@ class Trainer extends NgramParser
      * @param string $dirname Name of the directory where the translations files are located
      * @return void
      */
-    public function learn(string $dirname = '')
+    public function learn($dirname = '')
     {
         if (empty($dirname))
         {

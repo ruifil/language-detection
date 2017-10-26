@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types = 1);
-
 namespace LanguageDetection;
 
 use LanguageDetection\Tokenizer\TokenizerInterface;
@@ -41,7 +39,7 @@ abstract class NgramParser
      * @param int $minLength
      * @throws \LengthException
      */
-    public function setMinLength(int $minLength)
+    public function setMinLength($minLength)
     {
         if ($minLength <= 0 || $minLength >= $this->maxLength)
         {
@@ -55,7 +53,7 @@ abstract class NgramParser
      * @param int $maxLength
      * @throws \LengthException
      */
-    public function setMaxLength(int $maxLength)
+    public function setMaxLength($maxLength)
     {
         if ($maxLength <= $this->minLength)
         {
@@ -69,7 +67,7 @@ abstract class NgramParser
      * @param int $maxNgrams
      * @throws \LengthException
      */
-    public function setMaxNgrams(int $maxNgrams)
+    public function setMaxNgrams($maxNgrams)
     {
         if ($maxNgrams <= 0)
         {
@@ -93,7 +91,7 @@ abstract class NgramParser
      * @param string $str
      * @return array
      */
-    private function tokenize(string $str)
+    private function tokenize($str)
     {
         if (null === $this->tokenizer)
         {
@@ -107,7 +105,7 @@ abstract class NgramParser
      * @param string $str
      * @return array
      */
-    protected function getNgrams(string $str): array
+    protected function getNgrams($str)
     {
         $tokens = [];
 
@@ -138,7 +136,6 @@ abstract class NgramParser
         {
             return [];
         }
-
         $tokens = array_merge(...$tokens);
         unset($tokens['_']);
 
